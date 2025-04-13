@@ -57,7 +57,7 @@ jobs:
 
       # Build the web app
       - name: Build web
-        run: flutter build web --release --web-renderer canvaskit --base-href=/ludo_mini_app/
+        run: flutter build web --release --web-renderer canvaskit --base-href=/ludo_mini_app\
         # Replace <repository-name> with your repo name (e.g., ludo-mini-app)
 
       # Deploy to GitHub Pages
