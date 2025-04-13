@@ -1,0 +1,53 @@
+name: Build and Deploy Flutter Web
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Java (required for Flutter)
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x' # Specify your Flutter version
+          channel: 'stable'
+          cache: true
+
+      # Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Run tests (optional)
+      - name: Run tests
+        run: flutter test
+
+      # Build the web app
+      - name: Build web
+        run: flutter build web --release
+
+      # Optional: Deploy to GitHub Pages (remove if not needed)
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
