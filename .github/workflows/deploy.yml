@@ -1,1 +1,37 @@
+name: Build and Deploy Ludo Mini App to GitHub Pages
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x' # Use your preferred version
+          channel: 'stable'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Build Flutter web app
+      - name: Build web app
+        run: flutter build web --release --base-href "/ludo-telegram-mini-app/"
+
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
